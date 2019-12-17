@@ -6,7 +6,7 @@ const teacherSchema = new Schema({
     type: String,
     required: true
   },
-  email: {
+  mail: {
     type: String,
     required: true
   },
@@ -14,7 +14,7 @@ const teacherSchema = new Schema({
     type: String,
     required: true
   },
-  imageURL: {
+  imageUrl: {
     type: String,
     required: true
   },
@@ -22,7 +22,7 @@ const teacherSchema = new Schema({
     type: String,
     required: false
   },
-  page: {
+  personalPage: {
     type: String,
     required: false
   },

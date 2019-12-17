@@ -14,8 +14,10 @@ app.use((req, res, next) => {
   next();
 });
 const authRoutes = require("./routes/auth");
+const teacherRoutes = require("./routes/teachers");
 
 app.use("/auth", authRoutes);
+app.use("/teachers", teacherRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
