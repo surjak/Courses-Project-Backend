@@ -6,7 +6,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+mongoose.set("useFindAndModify", false);
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
@@ -15,9 +15,11 @@ app.use((req, res, next) => {
 });
 const authRoutes = require("./routes/auth");
 const teacherRoutes = require("./routes/teachers");
+const courseRoutes = require("./routes/courses");
 
 app.use("/auth", authRoutes);
 app.use("/teachers", teacherRoutes);
+app.use("/courses", courseRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);

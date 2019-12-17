@@ -20,7 +20,13 @@ const userSchema = new Schema({
     required: true,
     default: false
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  coursesAndNotes: [
+    {
+      courseId: { type: Schema.Types.ObjectId, ref: "Course" },
+      note: { type: Number }
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", userSchema);

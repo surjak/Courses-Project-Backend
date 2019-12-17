@@ -62,3 +62,22 @@ exports.getTeachers = (req, res, next) => {
       next(err);
     });
 };
+exports.removeTeacher = (req, res, next) => {
+  if (!req.admin) {
+    const error = new Error("No permission!");
+    error.statusCode = 422;
+    throw error;
+  }
+  const teacherId = req.body.teacherId;
+  Teacher.findByIdAndRemove(teacherId)
+    .then(result => {
+      console.log(result);
+      res.json({ message: "Deleted" });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
