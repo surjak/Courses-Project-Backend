@@ -25,13 +25,11 @@ router.post(
       .notEmpty(),
     body("imageUrl")
       .trim()
-      .isURL()
-      .withMessage("Please enter URL")
+
       .notEmpty(),
     body("page")
       .trim()
-      .isURL()
-      .withMessage("Please enter URL")
+
       .notEmpty()
   ],
   isAuth,

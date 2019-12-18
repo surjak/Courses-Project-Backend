@@ -18,8 +18,7 @@ router.post(
       .notEmpty(),
     body("imageURL")
       .trim()
-      .isURL()
-      .withMessage("Please enter URL")
+
       .notEmpty(),
     body("description")
       .trim()
@@ -47,8 +46,7 @@ router.post(
       .notEmpty(),
     body("imageURL")
       .trim()
-      .isURL()
-      .withMessage("Please enter URL")
+
       .notEmpty(),
     body("description")
       .trim()
@@ -61,6 +59,8 @@ router.post(
   coursesController.editCourse
 );
 router.post("/delete", isAuth, coursesController.removeCourse);
-router.get("/", isAuth, coursesController.getCourses);
 
+router.post("/addCourseToUser", isAuth, coursesController.addCourseToUser);
+router.get("/getUserCourses", isAuth, coursesController.getUserCourses);
+router.get("/", isAuth, coursesController.getCourses);
 module.exports = router;

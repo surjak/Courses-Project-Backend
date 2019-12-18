@@ -144,7 +144,7 @@ exports.editCourse = (req, res, next) => {
     ects: ects,
     semester: semester,
     formOfCourse: formOfCourse,
-    imageUrl: imageURL,
+    imageURL: imageURL,
     description: description,
     max: max,
     teachers: teachers
@@ -153,6 +153,52 @@ exports.editCourse = (req, res, next) => {
       res.json({
         courseID: result._id
       });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.addCourseToUser = (req, res, next) => {
+  User.findById(req.userId)
+    .then(result => {
+      result.coursesAndNotes.forEach(c => {
+        if (c.courseId == req.body.courseId) {
+          const error = new Error("You can't join this course another time");
+          error.statusCode = 422;
+          throw error;
+        }
+      });
+      result.coursesAndNotes.push({ courseId: req.body.courseId, note: null });
+      result.save();
+      res.json({ message: "isOk" });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+exports.getUserCourses = (req, res, next) => {
+  User.findById(req.userId)
+    .populate("coursesAndNotes.courseId")
+    .exec()
+    .then(data => {
+      return data.coursesAndNotes;
+    })
+    .then(data => {
+      console.log(data);
+
+      const responseData = [];
+      data.forEach(c => responseData.push(c.courseId));
+      return responseData;
+    })
+    .then(response => {
+      res.json({ data: response });
     })
     .catch(err => {
       if (!err.statusCode) {
