@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const User = require("../models/user");
 const Teacher = require("../models/teacher");
 const Comment = require("../models/comment");
+const Course = require("../models/course");
 
 exports.addTeacher = (req, res, next) => {
   console.log(req.body);
@@ -72,6 +73,13 @@ exports.removeTeacher = (req, res, next) => {
   Teacher.findByIdAndRemove(teacherId)
     .then(result => {
       console.log(result);
+      Course.find({}, (err, courses) => {
+        courses.map(course => {
+          const id = course.teachers.indexOf(teacherId);
+          course.teachers.splice(id, 1);
+          course.save();
+        });
+      });
       res.json({ message: "Deleted" });
     })
     .catch(err => {

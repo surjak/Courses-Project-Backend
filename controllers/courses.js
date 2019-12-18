@@ -40,11 +40,6 @@ exports.addCourse = (req, res, next) => {
   course
     .save()
     .then(result => {
-      //   result
-      //     .populate("teachers")
-      //     .execPopulate()
-      //     .then(value => console.log(value));
-
       res.json({
         courseID: result._id
       });
@@ -88,6 +83,76 @@ exports.getCourses = (req, res, next) => {
         });
       });
       res.json({ data: responseData });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.removeCourse = (req, res, next) => {
+  if (!req.admin) {
+    const error = new Error("No permission!");
+    error.statusCode = 422;
+    throw error;
+  }
+  const courseID = req.body.courseID;
+  Course.findByIdAndRemove(courseID)
+    .then(result => {
+      console.log(result);
+
+      res.json({ message: "Deleted" });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.editCourse = (req, res, next) => {
+  console.log("edit");
+
+  const errors = validationResult(req);
+  if (!req.admin) {
+    const error = new Error("No permission!");
+    error.statusCode = 422;
+    throw error;
+  }
+  if (!errors.isEmpty()) {
+    const error = new Error("Validation Failed!");
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+  const {
+    courseId,
+    name,
+    ects,
+    semester,
+    formOfCourse,
+    imageURL,
+    teachers,
+    description,
+    max
+  } = req.body;
+  Course.findByIdAndUpdate(courseId, {
+    name: name,
+    ects: ects,
+    semester: semester,
+    formOfCourse: formOfCourse,
+    imageUrl: imageURL,
+    description: description,
+    max: max,
+    teachers: teachers
+  })
+    .then(result => {
+      res.json({
+        courseID: result._id
+      });
     })
     .catch(err => {
       if (!err.statusCode) {
