@@ -56,3 +56,43 @@ exports.addCourse = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getCourses = (req, res, next) => {
+  console.log("hel");
+
+  const responseData = [];
+  Course.find()
+    .populate("teachers")
+    .populate("attendees")
+    .populate("comments")
+    .exec()
+    .then(result => {
+      result.forEach(course => {
+        let grade = 0;
+        if (course.countOfNotes != 0) {
+          grade = course.sumOfNotes / course.countOfNotes;
+        }
+        responseData.push({
+          _id: course._id,
+          name: course.name,
+          ects: +course.ects,
+          semester: +course.semester,
+          formOfCourse: course.formOfCourse,
+          grade: grade,
+          imageUrl: course.imageURL,
+          description: course.description,
+          tutors: course.teachers,
+          max: course.max,
+          comments: course.comments,
+          attendees: course.attendees.length
+        });
+      });
+      res.json({ data: responseData });
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
