@@ -182,6 +182,17 @@ exports.addCourseToUser = (req, res, next) => {
       }
       next(err);
     });
+  Course.findById(req.body.courseId)
+    .then(course => {
+      course.attendees.push(req.userId);
+      course.save();
+    })
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 };
 exports.getUserCourses = (req, res, next) => {
   User.findById(req.userId)
@@ -221,6 +232,45 @@ exports.getUserCourseByID = (req, res, next) => {
       });
     })
 
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+exports.rateCourse = (req, res, next) => {
+  console.log("elo");
+
+  let oldRate = null;
+  User.findById(req.userId)
+    .then(user => {
+      user.coursesAndNotes.forEach(course => {
+        if (course.courseId == req.body.courseId) {
+          oldRate = course.note;
+          course.note = req.body.rate;
+        }
+      });
+      user.save();
+
+      Course.findById(req.body.courseId)
+        .then(course => {
+          if (oldRate != null) {
+            course.sumOfNotes = course.sumOfNotes - oldRate + req.body.rate;
+          } else {
+            course.sumOfNotes += req.body.rate;
+            course.countOfNotes += 1;
+          }
+          course.save();
+        })
+        .catch(err => {
+          if (!err.statusCode) {
+            err.statusCode = 500;
+          }
+          next(err);
+        });
+      res.json("updated");
+    })
     .catch(err => {
       if (!err.statusCode) {
         err.statusCode = 500;

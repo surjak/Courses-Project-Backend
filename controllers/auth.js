@@ -84,7 +84,7 @@ exports.login = (req, res, next) => {
         admin: loadedUser.admin,
         tutor: loadedUser.tutor,
         email: loadedUser.email,
-        expiresIn: 60 * 60 * 10
+        expiresIn: 60 * 60
       });
     })
     .catch(err => {
