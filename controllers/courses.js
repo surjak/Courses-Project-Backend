@@ -192,14 +192,35 @@ exports.getUserCourses = (req, res, next) => {
     })
     .then(data => {
       console.log(data);
+      res.json({ data: data });
+    })
 
-      const responseData = [];
-      data.forEach(c => responseData.push(c.courseId));
-      return responseData;
+    .catch(err => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getUserCourseByID = (req, res, next) => {
+  console.log("getByID");
+
+  User.findById(req.userId)
+    .populate("coursesAndNotes.courseId")
+    .exec()
+    .then(data => {
+      return data.coursesAndNotes;
     })
-    .then(response => {
-      res.json({ data: response });
+    .then(data => {
+      data.forEach(c => {
+        if (c.courseId._id == req.body.c_id) {
+          res.json({ data: c });
+          return;
+        }
+      });
     })
+
     .catch(err => {
       if (!err.statusCode) {
         err.statusCode = 500;

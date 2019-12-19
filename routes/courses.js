@@ -61,6 +61,7 @@ router.post(
 router.post("/delete", isAuth, coursesController.removeCourse);
 
 router.post("/addCourseToUser", isAuth, coursesController.addCourseToUser);
+router.post("/getUserCourseById", isAuth, coursesController.getUserCourseByID);
 router.get("/getUserCourses", isAuth, coursesController.getUserCourses);
 router.get("/", isAuth, coursesController.getCourses);
 module.exports = router;
