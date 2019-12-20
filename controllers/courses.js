@@ -111,6 +111,15 @@ exports.removeCourse = (req, res, next) => {
       }
       next(err);
     });
+
+  User.find({}, (err, users) => {
+    users.map(user => {
+      user.coursesAndNotes = user.coursesAndNotes.filter(
+        c => c.courseId != courseID
+      );
+      user.save();
+    });
+  });
 };
 
 exports.editCourse = (req, res, next) => {
