@@ -172,29 +172,41 @@ exports.editCourse = (req, res, next) => {
 };
 
 exports.addCourseToUser = (req, res, next) => {
-  User.findById(req.userId)
-    .then(result => {
-      result.coursesAndNotes.forEach(c => {
-        if (c.courseId == req.body.courseId) {
-          const error = new Error("You can't join this course another time");
-          error.statusCode = 422;
-          throw error;
-        }
-      });
-      result.coursesAndNotes.push({ courseId: req.body.courseId, note: null });
-      result.save();
-      res.json({ message: "isOk" });
-    })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
   Course.findById(req.body.courseId)
     .then(course => {
-      course.attendees.push(req.userId);
-      course.save();
+      if (course.attendees.length < course.max) {
+        course.attendees.push(req.userId);
+        course.save();
+      } else {
+        const error = new Error("There aren't free places");
+        error.statusCode = 422;
+        throw error;
+      }
+
+      User.findById(req.userId)
+        .then(result => {
+          result.coursesAndNotes.forEach(c => {
+            if (c.courseId == req.body.courseId) {
+              const error = new Error(
+                "You can't join this course another time"
+              );
+              error.statusCode = 422;
+              throw error;
+            }
+          });
+          result.coursesAndNotes.push({
+            courseId: req.body.courseId,
+            note: null
+          });
+          result.save();
+          res.json({ message: "isOk" });
+        })
+        .catch(err => {
+          if (!err.statusCode) {
+            err.statusCode = 500;
+          }
+          next(err);
+        });
     })
     .catch(err => {
       if (!err.statusCode) {
