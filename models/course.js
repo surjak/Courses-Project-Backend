@@ -32,7 +32,15 @@ const courseSchema = new Schema({
   },
   description: { type: String, required: true },
   max: { type: Number, required: true },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  comments: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      email: { type: String },
+      comment: {
+        type: String
+      }
+    }
+  ],
   attendees: [{ type: Schema.Types.ObjectId, ref: "User" }],
   teachers: [{ type: Schema.Types.ObjectId, ref: "Teacher" }]
 });

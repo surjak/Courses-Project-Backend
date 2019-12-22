@@ -24,5 +24,6 @@ module.exports = (req, res, next) => {
   }
   req.userId = decodedToken.userId;
   req.admin = decodedToken.admin;
+  req.email = decodedToken.email;
   next();
 };

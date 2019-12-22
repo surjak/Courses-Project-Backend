@@ -59,7 +59,7 @@ exports.getCourses = (req, res, next) => {
   Course.find()
     .populate("teachers")
     .populate("attendees")
-    .populate("comments")
+    .populate("comments.userId")
     .exec()
     .then(result => {
       result.forEach(course => {
@@ -298,4 +298,25 @@ exports.rateCourse = (req, res, next) => {
       }
       next(err);
     });
+};
+exports.addComment = (req, res, next) => {
+  console.log("comment");
+  console.log(req.body, req.userId);
+
+  User.findById(req.userId, (err, user) => {
+    user.comments.push({
+      courseId: req.body.courseId,
+      comment: req.body.comment
+    });
+    user.save();
+    Course.findById(req.body.courseId, (err, course) => {
+      course.comments.push({
+        userId: req.userId,
+        comment: req.body.comment,
+        email: req.email
+      });
+      course.save();
+      res.json({ message: "ok" });
+    });
+  });
 };

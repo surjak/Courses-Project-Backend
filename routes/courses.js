@@ -65,4 +65,5 @@ router.post("/getUserCourseById", isAuth, coursesController.getUserCourseByID);
 router.get("/getUserCourses", isAuth, coursesController.getUserCourses);
 router.post("/rate", isAuth, coursesController.rateCourse);
 router.get("/", coursesController.getCourses);
+router.post("/addComment", isAuth, coursesController.addComment);
 module.exports = router;

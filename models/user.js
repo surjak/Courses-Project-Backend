@@ -20,7 +20,14 @@ const userSchema = new Schema({
     required: true,
     default: false
   },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  comments: [
+    {
+      courseId: { type: Schema.Types.ObjectId, ref: "Course" },
+      comment: {
+        type: String
+      }
+    }
+  ],
   coursesAndNotes: [
     {
       courseId: { type: Schema.Types.ObjectId, ref: "Course" },

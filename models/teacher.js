@@ -26,9 +26,30 @@ const teacherSchema = new Schema({
     type: String,
     required: false
   },
-  learningSkills: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  personalSkills: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  softSkills: [{ type: Schema.Types.ObjectId, ref: "Comment" }]
+  learningSkills: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      comment: {
+        type: String
+      }
+    }
+  ],
+  personalSkills: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      comment: {
+        type: String
+      }
+    }
+  ],
+  softSkills: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: "User" },
+      comment: {
+        type: String
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model("Teacher", teacherSchema);
