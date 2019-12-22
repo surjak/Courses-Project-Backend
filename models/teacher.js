@@ -29,6 +29,7 @@ const teacherSchema = new Schema({
   learningSkills: [
     {
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      email: { type: String },
       comment: {
         type: String
       }
@@ -37,6 +38,7 @@ const teacherSchema = new Schema({
   personalSkills: [
     {
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      email: { type: String },
       comment: {
         type: String
       }
@@ -45,6 +47,7 @@ const teacherSchema = new Schema({
   softSkills: [
     {
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      email: { type: String },
       comment: {
         type: String
       }

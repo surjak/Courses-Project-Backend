@@ -46,9 +46,9 @@ exports.addTeacher = (req, res, next) => {
 
 exports.getTeachers = (req, res, next) => {
   Teacher.find()
-    .populate("learningSkills")
-    .populate("personalSkills")
-    .populate("softSkills")
+    // .populate("learningSkills")
+    // .populate("personalSkills")
+    // .populate("softSkills")
     .then(result => {
       console.log(result);
 
@@ -88,4 +88,39 @@ exports.removeTeacher = (req, res, next) => {
       }
       next(err);
     });
+};
+
+exports.addCommentToTeacher = (req, res, next) => {
+  const { type, comment, teacherId } = req.body;
+  if (type == "Learning Skills") {
+    Teacher.findById(teacherId, (err, teacher) => {
+      teacher.learningSkills.push({
+        userId: req.userId,
+        email: req.email,
+        comment: comment
+      });
+      teacher.save();
+      res.json("OK");
+    });
+  } else if (type == "Soft Skills") {
+    Teacher.findById(teacherId, (err, teacher) => {
+      teacher.softSkills.push({
+        userId: req.userId,
+        email: req.email,
+        comment: comment
+      });
+      teacher.save();
+      res.json("OK");
+    });
+  } else {
+    Teacher.findById(teacherId, (err, teacher) => {
+      teacher.personalSkills.push({
+        userId: req.userId,
+        email: req.email,
+        comment: comment
+      });
+      teacher.save();
+      res.json("OK");
+    });
+  }
 };

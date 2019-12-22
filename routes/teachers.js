@@ -36,6 +36,7 @@ router.post(
   teachersController.addTeacher
 );
 router.post("/remove", isAuth, teachersController.removeTeacher);
+router.post("/addComment", isAuth, teachersController.addCommentToTeacher);
 router.get("/", isAuth, teachersController.getTeachers);
 
 module.exports = router;
